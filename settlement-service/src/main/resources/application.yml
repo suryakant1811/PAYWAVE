@@ -1,0 +1,50 @@
+server:
+  port: ${SERVER_PORT:8084}
+spring:
+  application:
+    name: settlement-service
+  config:
+    import: optional:classpath:paywave-resilience.yml
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/settlement_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=UTC}
+    username: ${DB_USERNAME:paywave}
+    password: ${DB_PASSWORD:paywave_dev_password}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+paywave:
+  security:
+    jwt-secret: ${JWT_SECRET:dev-only-paywave-jwt-secret-change-me-32b}
+    access-token-minutes: ${JWT_ACCESS_MINUTES:15}
+    refresh-token-days: ${JWT_REFRESH_DAYS:7}
+    internal-api-key: ${INTERNAL_API_KEY:dev-internal-api-key-change-me}
+    cors-origins: ${CORS_ORIGINS:*}
+    public-paths: []
+  clients:
+    payment-service-url: ${PAYMENT_SERVICE_URL:http://localhost:8083}
+    wallet-service-url: ${WALLET_SERVICE_URL:http://localhost:8082}
+    notification-service-url: ${NOTIFICATION_SERVICE_URL:http://localhost:8081}
+  messaging:
+    mode: ${PAYWAVE_MESSAGING_MODE:log}
+    relay-delay-ms: 2000
+    kafka:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never

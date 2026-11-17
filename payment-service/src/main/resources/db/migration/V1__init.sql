@@ -1,8 +1,8 @@
 CREATE TABLE payments (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    payer_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    payer_id VARCHAR(36) NOT NULL,
     idempotency_key VARCHAR(80) NOT NULL,
-    payee_id CHAR(36) NOT NULL,
+    payee_id VARCHAR(36) NOT NULL,
     payee_type VARCHAR(20) NOT NULL,
     payment_type VARCHAR(20) NOT NULL,
     amount DECIMAL(19,2) NOT NULL,
@@ -16,9 +16,9 @@ CREATE TABLE payments (
     note VARCHAR(255) NULL,
     settled BIT(1) NOT NULL,
     settled_at DATETIME(3) NULL,
-    settlement_id CHAR(36) NULL,
+    settlement_id VARCHAR(36) NULL,
     history_recorded BIT(1) NOT NULL,
-    notify_user_id CHAR(36) NULL,
+    notify_user_id VARCHAR(36) NULL,
     counterparty_name VARCHAR(120) NULL,
     created_at DATETIME(3) NOT NULL,
     updated_at DATETIME(3) NOT NULL,
@@ -28,8 +28,8 @@ CREATE TABLE payments (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE payment_saga_steps (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    payment_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    payment_id VARCHAR(36) NOT NULL,
     step_name VARCHAR(64) NOT NULL,
     status VARCHAR(32) NOT NULL,
     detail VARCHAR(500) NULL,
@@ -39,8 +39,8 @@ CREATE TABLE payment_saga_steps (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE payment_refunds (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    payment_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    payment_id VARCHAR(36) NOT NULL,
     amount DECIMAL(19,2) NOT NULL,
     created_at DATETIME(3) NOT NULL,
     KEY idx_payment_refunds_payment (payment_id),
@@ -48,7 +48,7 @@ CREATE TABLE payment_refunds (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE outbox_events (
-    id CHAR(36) NOT NULL PRIMARY KEY,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     aggregate_type VARCHAR(64) NOT NULL,
     aggregate_id VARCHAR(36) NOT NULL,
     event_type VARCHAR(64) NOT NULL,
@@ -63,10 +63,10 @@ CREATE TABLE outbox_events (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE transactions (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    payment_id CHAR(36) NOT NULL,
-    owner_id CHAR(36) NOT NULL,
-    counterparty_id CHAR(36) NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    payment_id VARCHAR(36) NOT NULL,
+    owner_id VARCHAR(36) NOT NULL,
+    counterparty_id VARCHAR(36) NULL,
     counterparty_name VARCHAR(120) NULL,
     direction VARCHAR(10) NOT NULL,
     txn_type VARCHAR(32) NOT NULL,
@@ -82,8 +82,8 @@ CREATE TABLE transactions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE merchants (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    owner_user_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    owner_user_id VARCHAR(36) NOT NULL,
     business_name VARCHAR(160) NOT NULL,
     category VARCHAR(80) NOT NULL,
     contact_email VARCHAR(255) NOT NULL,
@@ -98,8 +98,8 @@ CREATE TABLE merchants (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE payment_requests (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    merchant_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    merchant_id VARCHAR(36) NOT NULL,
     amount DECIMAL(19,2) NOT NULL,
     note VARCHAR(255) NULL,
     expires_at DATETIME(3) NOT NULL,
@@ -109,9 +109,9 @@ CREATE TABLE payment_requests (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE refunds (
-    id CHAR(36) NOT NULL PRIMARY KEY,
-    payment_id CHAR(36) NOT NULL,
-    requester_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    payment_id VARCHAR(36) NOT NULL,
+    requester_id VARCHAR(36) NOT NULL,
     idempotency_key VARCHAR(80) NOT NULL,
     amount DECIMAL(19,2) NOT NULL,
     fee_component DECIMAL(19,2) NOT NULL,
@@ -120,9 +120,9 @@ CREATE TABLE refunds (
     status VARCHAR(20) NOT NULL,
     failure_reason VARCHAR(255) NULL,
     payment_type VARCHAR(20) NOT NULL,
-    payer_id CHAR(36) NOT NULL,
-    payee_id CHAR(36) NOT NULL,
-    notify_user_id CHAR(36) NULL,
+    payer_id VARCHAR(36) NOT NULL,
+    payee_id VARCHAR(36) NOT NULL,
+    notify_user_id VARCHAR(36) NULL,
     created_at DATETIME(3) NOT NULL,
     updated_at DATETIME(3) NOT NULL,
     UNIQUE KEY uk_refund_idem (requester_id, idempotency_key),

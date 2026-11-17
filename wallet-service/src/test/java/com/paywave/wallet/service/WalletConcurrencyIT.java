@@ -64,6 +64,9 @@ class WalletConcurrencyIT {
                     walletService.debit(new WalletMutationRequest(wallet.getOwnerId(), "CUSTOMER", new BigDecimal("10.00"),
                             "debit-" + n, "TRANSFER", UUID.randomUUID(), "INR", wallet.getOwnerId()));
                     success.incrementAndGet();
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    rejected.incrementAndGet();
                 } catch (RuntimeException ex) {
                     rejected.incrementAndGet();
                 } finally {

@@ -4,20 +4,22 @@ Use these files in the repo and for social posts (GitHub, LinkedIn).
 
 | File | Use for |
 |------|---------|
-| [`paywave-microservices-architecture.svg`](./paywave-microservices-architecture.svg) | **Application** layer: 5 services, databases, flows (README, technical posts) |
-| [`paywave-aws-devops-architecture.svg`](./paywave-aws-devops-architecture.svg) | **AWS + DevOps** target: ALB, EKS, RDS, ECR, Jenkins, SonarQube, Trivy, Argo CD |
+| [`paywave-microservices-architecture.png`](./paywave-microservices-architecture.png) | **GitHub README** — application layer (renders reliably) |
+| [`paywave-aws-devops-architecture.png`](./paywave-aws-devops-architecture.png) | **GitHub README** — AWS + DevOps target |
+| [`paywave-microservices-architecture.svg`](./paywave-microservices-architecture.svg) | Editable vector (Inkscape / browser) |
+| [`paywave-aws-devops-architecture.svg`](./paywave-aws-devops-architecture.svg) | Editable vector |
 | [`../../image.png`](../../image.png) | Simple “what the app does” overview (non-technical audience) |
 
 ## GitHub
 
-In `README.md`:
+The README uses **PNG** files. GitHub often shows *Invalid image source* for embedded **SVG** in README; use PNG for the repo, SVG for editing.
 
 ```markdown
-![PayWave microservices](docs/assets/paywave-microservices-architecture.svg)
-![PayWave on AWS](docs/assets/paywave-aws-devops-architecture.svg)
+![PayWave microservices](docs/assets/paywave-microservices-architecture.png)
+![PayWave on AWS](docs/assets/paywave-aws-devops-architecture.png)
 ```
 
-GitHub renders SVG inline in the README.
+**Mermaid** blocks in the README also render on GitHub (no image file needed).
 
 ## LinkedIn (PNG export)
 

@@ -2,79 +2,156 @@
 
 PayWave is a Paytm-style wallet and payments backend. A customer can register, hold a wallet, add money through a simulated gateway, pay another customer, pay a merchant, see history, request a refund, and run a merchant settlement.
 
-The application is five backend processes plus an optional **web-ui-service** (static demo UI, no database). There are no Dockerfiles in this repository. Add those yourself when you deploy.
+**Stack:** Java 21 · Spring Boot 3 · MySQL 8 · Maven · API gateway (JWT) · optional demo UI in the gateway JAR.
 
-Sample passwords in `.env.example` are for a private development host. This code does not talk to a real bank, card network, or UPI.
+Sample passwords in `.env.example` are for private development only. This codebase does **not** connect to real banks, card networks, or UPI.
+
+---
+
+## Status
+
+| Layer | Status |
+| --- | --- |
+| **Application** | Five microservices + gateway; integration smoke test passed on EC2 |
+| **Demo UI** | Embedded in `api-gateway` at `http://<host>:8080/` |
+| **AWS / DevOps** | **In progress** — Terraform, EKS, RDS, Jenkins, SonarQube, Trivy, Argo CD (see below) |
+
+---
 
 ## What the application does
 
 A customer signs up and immediately receives a wallet. Adding money, sending money, and paying a merchant all go through one payment flow that updates the wallet and writes a balanced ledger entry. Merchants get a QR identity, can receive payments minus a 1.5% fee, and can be settled for a calendar day. Refunds reverse the money movement before settlement. The customer can read the resulting history and simulated email, SMS, and in-app messages.
 
+![PayWave overview](image.png)
+
+---
+
 ## The five services
 
 | Service | Port | Database | What it owns |
 | --- | --- | --- | --- |
-| api-gateway | 8080 | none | The only public entry point |
-| account-service | 8081 | account_db | Sign-in, profile, KYC, and notifications |
-| wallet-service | 8082 | wallet_db | Wallet balances and the double-entry ledger |
-| payment-service | 8083 | payment_db | Payments, merchants, history, and refunds |
-| settlement-service | 8084 | settlement_db | Merchant settlement for one day |
-| web-ui-service | 8090 | none | Demo wallet UI (served publicly via gateway `/`) |
+| api-gateway | 8080 | none | Public entry: routing, JWT, rate limits, **demo UI** |
+| account-service | 8081 | account_db | Sign-in, profile, KYC, notifications |
+| wallet-service | 8082 | wallet_db | Balances and double-entry ledger |
+| payment-service | 8083 | payment_db | Payments, merchants, history, refunds |
+| settlement-service | 8084 | settlement_db | Merchant settlement for one calendar day |
 
-Clients call the gateway. Open `http://<host>:8080/` in a browser for the demo UI (HTML is **embedded in the gateway JAR** — no need to run web-ui-service on EC2). Optional **web-ui-service** is the same static files as a separate process for local dev. The gateway checks the JWT and forwards `/api/v1/auth`, `/api/v1/users`, and `/api/v1/notifications` to account-service; `/api/v1/wallets` and `/api/v1/ledger` to wallet-service; `/api/v1/payments`, `/api/v1/transactions`, `/api/v1/merchants`, and `/api/v1/refunds` to payment-service; and `/api/v1/settlements` to settlement-service.
+Clients use only the **gateway** (`8080`). Open `/` in a browser for the demo wallet UI. Optional **web-ui-service** (`8090`) is the same static UI as a separate process for local dev only.
 
-## Run one service
+Gateway routes: `/api/v1/auth`, `/users`, `/notifications` → account; `/wallets`, `/ledger` → wallet; `/payments`, `/transactions`, `/merchants`, `/refunds` → payment; `/settlements` → settlement.
 
-Install JDK 21 and Maven 3.9, create that service's MySQL 8 database, then:
+---
+
+## Architecture (application)
+
+GitHub does not always render SVG in the README, so diagrams are **PNG** (and **Mermaid** below).
+
+![PayWave microservices architecture](docs/assets/paywave-microservices-architecture.png)
+
+```mermaid
+flowchart LR
+  C[Client] --> GW[api-gateway :8080]
+  GW --> ACC[account :8081]
+  GW --> WAL[wallet :8082]
+  GW --> PAY[payment :8083]
+  GW --> SET[settlement :8084]
+  ACC --> D1[(account_db)]
+  WAL --> D2[(wallet_db)]
+  PAY --> D3[(payment_db)]
+  SET --> D4[(settlement_db)]
+  PAY -. internal REST .-> WAL
+  ACC -. internal REST .-> WAL
+  SET -. internal REST .-> PAY
+  SET -. internal REST .-> WAL
+```
+
+Editable sources: [SVG microservices](docs/assets/paywave-microservices-architecture.svg) · [simple overview PNG](image.png)
+
+---
+
+## AWS & DevOps (what we are building)
+
+Target: run PayWave on **AWS** with **Terraform** (infrastructure), **EKS** (runtime), **RDS** (MySQL), **ECR** (images), **GitOps** (Helm + **Argo CD**), and **Jenkins** with **SonarQube** + **Trivy** in the pipeline. **Ansible** is for bootstrapping hosts (Jenkins/Sonar agents), not for app pod config—that is **Helm**.
+
+Full roadmap: **[docs/aws-devops-roadmap.md](docs/aws-devops-roadmap.md)**
+
+![PayWave on AWS — target platform](docs/assets/paywave-aws-devops-architecture.png)
+
+```mermaid
+flowchart TB
+  U[Users HTTPS] --> ALB[ALB · public subnet]
+  subgraph VPC
+    ALB --> ING[Ingress]
+    ING --> GW[api-gateway pods]
+    GW --> SVC[account · wallet · payment · settlement]
+    SVC --> RDS[(RDS MySQL · 4 schemas)]
+  end
+  GIT[Git] --> JEN[Jenkins]
+  JEN --> SON[SonarQube]
+  JEN --> ECR[ECR]
+  ECR --> ARGO[Argo CD]
+  ARGO --> ING
+```
+
+| Area | Tools |
+| --- | --- |
+| **IaC** | Terraform — VPC, NAT, EKS, RDS, ALB, Route53, ACM, ECR, Secrets Manager |
+| **Config / deploy** | Helm charts, Argo CD (Jenkins updates image tag in Git; Argo syncs cluster) |
+| **CI** | Jenkins — `mvn test`, Docker build, quality & security gates |
+| **Quality** | SonarQube on source code |
+| **Security** | Trivy on container images before ECR push |
+| **Bootstrap** | Ansible for Jenkins / SonarQube / agents (optional) |
+
+**Principles**
+
+- Only **gateway** is internet-facing (ALB → Ingress → `api-gateway`).
+- Backends stay **private** (ClusterIP); internal calls use `/internal/**` + `X-Internal-Api-Key`.
+- **One deploy path:** image → ECR → Helm → Argo CD (no S3 `java -jar` on Kubernetes workers).
+- **RDS** replaces Docker MySQL on the app host for non-dev environments.
+
+Terraform/Ansible/Jenkins job definitions are **not in this repo yet**; this application repo stays the Java source of truth.
+
+---
+
+## Run locally / on EC2
+
+Install **JDK 21** and **Maven 3.9**. Create four MySQL schemas (`docker/mysql/init.sh` can init them in Docker).
 
 ```bash
 cp .env.example .env
 set -a && source .env && set +a
-export DB_URL='jdbc:mysql://localhost:3306/account_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=UTC'
-mvn -pl account-service -am spring-boot:run
+./scripts/build-fat-jars.sh
+# start MySQL, then each *-service JAR, then api-gateway — see docs/local-development.md
+./scripts/e2e-smoke.sh http://localhost:8080
 ```
 
-Repeat with `wallet_db` on port 8082, `payment_db` on port 8083, and `settlement_db` on port 8084. `docker/mysql/init.sh` creates those four databases if you start MySQL from the official image and mount the script.
+`PAYWAVE_MESSAGING_MODE=http` on wallet, payment, settlement when account-service should receive notification events.
 
-Leave `PAYWAVE_MESSAGING_MODE` unset. The default is `log`, so Kafka is not required. Set it to `http` when account-service is running and you want wallet, payment, and settlement events delivered to `POST /internal/events`.
-
-Swagger for a service is `http://localhost:<port>/swagger-ui.html`. The gateway does not merge those documents.
-
-```bash
-mvn test
-mvn -pl wallet-service -am test -Pintegration
-```
-
-`mvn test` skips the Testcontainers concurrency test. The integration profile needs Docker only because that test starts MySQL itself.
-
-This repository was written on a machine without Java or Maven, so it has not been compiled here.
+---
 
 ## Money rules
 
 - Amounts are INR with two decimal places.
-- A wallet balance changes together with a wallet entry, and the payment flow posts a balanced ledger journal for that movement.
-- Ledger journals are insert-only. Corrections are new reversal journals.
-- The same idempotency key does not move money twice.
-- A transfer that cannot credit the receiver credits the sender back.
-- Merchant payments keep a 1.5% fee. The merchant wallet receives the net.
-- Add-money amounts whose paise are `.13` are declined. Amounts whose paise are `.14` stay pending and do not move money.
-- A settled payment cannot be refunded.
+- Wallet balance and ledger journal move together; journals are insert-only (reversals are new entries).
+- Idempotency keys prevent duplicate money movement.
+- Merchant fee **1.5%**; `.13` paise top-up fails; `.14` stays pending (demo rules).
+- Refunds blocked after settlement.
 
-## Architecture diagrams
-
-![PayWave microservices](docs/assets/paywave-microservices-architecture.svg)
-
-![PayWave AWS target platform](docs/assets/paywave-aws-devops-architecture.svg)
-
-See [docs/assets/README.md](docs/assets/README.md) for LinkedIn PNG export tips.
+---
 
 ## Documentation
 
-- [Architecture](docs/architecture.md)
-- [What each service does](docs/services.md)
-- [Database design](docs/database.md)
-- [API reference](docs/api.md)
-- [Local development](docs/local-development.md)
-- [Business workflows](docs/workflows.md)
-- [Environment variables](docs/environment.md)
-- [Testing](docs/testing.md)
+| Doc | Topic |
+| --- | --- |
+| [AWS & DevOps roadmap](docs/aws-devops-roadmap.md) | Terraform, EKS, RDS, CI/CD, tools |
+| [Architecture](docs/architecture.md) | Service boundaries and calls |
+| [What each service does](docs/services.md) | Deep dive per service |
+| [Local development](docs/local-development.md) | EC2, fat JARs, smoke test |
+| [Database design](docs/database.md) | Schemas |
+| [API reference](docs/api.md) | Endpoints |
+| [Workflows](docs/workflows.md) | Business flows |
+| [Environment variables](docs/environment.md) | Config |
+| [Testing](docs/testing.md) | Unit and integration tests |
+| [Diagram assets](docs/assets/README.md) | PNG/SVG, LinkedIn export |
+
+No Dockerfiles in this repo yet—you add them when building images for ECR.

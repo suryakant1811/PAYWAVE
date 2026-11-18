@@ -1,0 +1,190 @@
+terraform {
+  required_version = ">= 1.0.0"
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">= 4.0.0"
+    }
+  }
+  backend "s3" {
+    bucket = "infra-locking-bucket-18-11-03"
+    key = "terraform.tfstate"
+    region = "ap-south-1"
+    use_lockfile = true
+  }
+}
+
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_vpc" "prod-vpc" {
+  cidr_block = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+}
+
+resource "aws_subnet" "prod-subnet-public-01" {
+  vpc_id = aws_vpc.prod-vpc.id
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "ap-south-1a"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "prod-subnet-public-02" {
+  vpc_id = aws_vpc.prod-vpc.id
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "ap-south-1b"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "prod-subnet-private-01" {
+  vpc_id = aws_vpc.prod-vpc.id
+  cidr_block = "10.0.11.0/24"
+  availability_zone = "ap-south-1a"
+  map_public_ip_on_launch = false
+}
+
+resource "aws_subnet" "prod-subnet-private-02" {
+  vpc_id = aws_vpc.prod-vpc.id
+  cidr_block = "10.0.4.0/24"
+  availability_zone = "ap-south-1b"
+  map_public_ip_on_launch = false
+}
+
+resource "aws_internet_gateway" "prod-igw" {
+  vpc_id = aws_vpc.prod-vpc.id
+}
+
+resource "aws_route_table" "prod-rt-public" {
+  vpc_id = aws_vpc.prod-vpc.id
+  route{
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.prod-igw.id
+  }
+}
+
+resource "aws_route_table_association" "prod-rt-association-public-01" {
+  subnet_id = aws_subnet.prod-subnet-public-01.id
+  route_table_id = aws_route_table.prod-rt-public.id
+}
+
+resource "aws_route_table_association" "prod-rt-association-public-02" {
+  subnet_id = aws_subnet.prod-subnet-public-02.id
+  route_table_id = aws_route_table.prod-rt-public.id
+}
+
+resource "aws_eip" "prod-eip" {
+  domain = "vpc"
+}
+
+resource "aws_nat_gateway" "prod-ngw" {
+  allocation_id = aws_eip.prod-eip.id
+  subnet_id = aws_subnet.prod-subnet-public-01.id
+  depends_on = [aws_internet_gateway.prod-igw]
+}
+
+resource "aws_route_table" "prod-rt-private" {
+    vpc_id = aws_vpc.prod-vpc.id
+    route{
+        cidr_block = "0.0.0.0/0"
+        nat_gateway_id = aws_nat_gateway.prod-ngw.id
+    }
+}
+
+resource "aws_route_table_association" "prod-rt-association-private-01" {
+    subnet_id = aws_subnet.prod-subnet-private-01.id
+    route_table_id = aws_route_table.prod-rt-private.id
+}
+
+resource "aws_route_table_association" "prod-rt-association-private-02" {
+    subnet_id = aws_subnet.prod-subnet-private-02.id
+    route_table_id = aws_route_table.prod-rt-private.id
+}
+
+resource "aws_security_group" "prod-sg" {
+  name = "prod-sg"
+  description = "Security group for production"
+  vpc_id = aws_vpc.prod-vpc.id
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow SSH traffic from the internet"
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all traffic out of the security group"
+  }
+}
+
+resource "aws_db_subnet_group" "prod-db-subnet-group" {
+  name = "prod-db-subnet-group"
+  description = "Subnet group for production database"
+  subnet_ids = [
+    aws_subnet.prod-subnet-private-01.id, 
+    aws_subnet.prod-subnet-private-02.id
+  ]
+}
+
+resource "aws_security_group" "prod-rds-sg" {
+  name = "prod-rds-sg"
+  description = "Security group for production database"
+  vpc_id = aws_vpc.prod-vpc.id
+  ingress {
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = [aws_subnet.prod-subnet-private-01.cidr_block, aws_subnet.prod-subnet-private-02.cidr_block]
+    description = "Allow MySQL traffic from the internet"
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all traffic out of the security group"
+  } 
+}
+
+resource "aws_db_instance" "prod-mysql-db" {
+  identifier = "paywave-prod-mysqlc"
+  engine = "mysql"
+  instance_class = "db.t3.micro"
+  allocated_storage = 20
+  storage_type = "gp2"
+  backup_retention_period = 0
+  db_name = "prod-mysql-db"
+  username = "admin"
+  password = "admin123"
+  db_subnet_group_name = aws_db_subnet_group.prod-db-subnet-group.name
+  vpc_security_group_ids = [aws_security_group.prod-rds-sg.id]
+  
+  multi_az = false
+  skip_final_snapshot = true
+}
+
+variable "ecr_repos_names" {
+  type = list(string)
+  default = [ 
+    "prod-api-gateway",
+    "prod-account-service",
+    "prod-wallet-service",
+    "prod-payment-service",
+    "prod-settlement-service",
+  ]
+}
+
+resource "aws_ecr_repository" "prod-ecr-repos" {
+  for_each = var.ecr_repos_names
+  name = each.value
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  image_tag_mutability = "MUTABLE"
+}
+

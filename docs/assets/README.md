@@ -6,8 +6,10 @@ Use these files in the repo and for social posts (GitHub, LinkedIn).
 |------|---------|
 | [`paywave-microservices-architecture.png`](./paywave-microservices-architecture.png) | **GitHub README** — application layer (renders reliably) |
 | [`paywave-aws-devops-architecture.png`](./paywave-aws-devops-architecture.png) | **GitHub README** — AWS + DevOps target |
+| [`paywave-aws-full-architecture.png`](./paywave-aws-full-architecture.png) | Full AWS VPC, AZ, subnet, EKS, RDS and CI/CD view |
 | [`paywave-microservices-architecture.svg`](./paywave-microservices-architecture.svg) | Editable vector (Inkscape / browser) |
 | [`paywave-aws-devops-architecture.svg`](./paywave-aws-devops-architecture.svg) | Editable vector |
+| [`paywave-aws-full-architecture.svg`](./paywave-aws-full-architecture.svg) | Editable full AWS vector |
 | [`../../image.png`](../../image.png) | Simple “what the app does” overview (non-technical audience) |
 
 ## GitHub

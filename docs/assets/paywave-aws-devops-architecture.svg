@@ -1,85 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="980" viewBox="0 0 1200 980">
-  <title>PayWave AWS Target Architecture</title>
-  <rect width="1200" height="980" fill="#f8fafc"/>
-  <rect width="1200" height="6" fill="#00baf2"/>
-  <text x="48" y="46" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="#0b1220">PayWave on AWS</text>
-  <text x="48" y="78" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#475569">Terraform, EKS, RDS, ECR, Jenkins, SonarQube, Trivy, Argo CD, Helm</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+  <title>PayWave AWS DevOps architecture</title>
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#232f3e"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#232f3e}.h1{font-size:24px;font-weight:700}.h2{font-size:17px;font-weight:700}.h3{font-size:13px;font-weight:700}.b{font-size:11px}.s{font-size:10px;fill:#545b64}.f{fill:none;stroke:#232f3e;stroke-width:2;marker-end:url(#a)}
+    </style>
+  </defs>
+  <rect width="1500" height="850" fill="#f2f3f3"/>
+  <rect x="25" y="20" width="1450" height="800" rx="20" fill="#fff" stroke="#232f3e" stroke-width="3"/>
+  <rect x="25" y="20" width="78" height="64" fill="#232f3e"/>
+  <text x="64" y="60" text-anchor="middle" font-size="24" font-weight="700" fill="#fff">aws</text>
+  <text x="125" y="60" class="h1">PayWave CI/CD and GitOps Architecture</text>
+  <text x="1435" y="58" text-anchor="end" class="b">Jenkins builds | Argo CD deploys</text>
 
-  <rect x="48" y="112" width="170" height="68" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-  <text x="133" y="142" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="bold" fill="#0b1220">Users</text>
-  <text x="133" y="164" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="#64748b">HTTPS xyz.com</text>
+  <rect x="65" y="115" width="1370" height="235" rx="10" fill="#fafafa" stroke="#8a8d90" stroke-width="2"/>
+  <text x="90" y="148" class="h2">Continuous Integration</text>
+  <g>
+    <rect x="90" y="185" width="120" height="80" rx="7" fill="#24292f"/><text x="150" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">GitHub</text><text x="150" y="240" text-anchor="middle" font-size="10" fill="#fff">source push</text>
+    <rect x="255" y="185" width="120" height="80" rx="7" fill="#d33833"/><text x="315" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Jenkins</text><text x="315" y="240" text-anchor="middle" font-size="10" fill="#fff">pipeline</text>
+    <rect x="420" y="185" width="120" height="80" rx="7" fill="#4e9bba"/><text x="480" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Maven</text><text x="480" y="240" text-anchor="middle" font-size="10" fill="#fff">test + package</text>
+    <rect x="585" y="185" width="120" height="80" rx="7" fill="#4e9bba"/><text x="645" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">SonarQube</text><text x="645" y="240" text-anchor="middle" font-size="10" fill="#fff">quality gate</text>
+    <rect x="750" y="185" width="120" height="80" rx="7" fill="#0f7c90"/><text x="810" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Docker</text><text x="810" y="240" text-anchor="middle" font-size="10" fill="#fff">build images</text>
+    <rect x="915" y="185" width="120" height="80" rx="7" fill="#0f7c90"/><text x="975" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Trivy</text><text x="975" y="240" text-anchor="middle" font-size="10" fill="#fff">image scan</text>
+    <rect x="1080" y="185" width="120" height="80" rx="7" fill="#f58536"/><text x="1140" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Amazon ECR</text><text x="1140" y="240" text-anchor="middle" font-size="10" fill="#fff">5 repositories</text>
+    <rect x="1245" y="185" width="140" height="80" rx="7" fill="#24292f"/><text x="1315" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Helm Git repo</text><text x="1315" y="240" text-anchor="middle" font-size="10" fill="#fff">update image tag</text>
+  </g>
+  <path d="M210 225 H255 M375 225 H420 M540 225 H585 M705 225 H750 M870 225 H915 M1035 225 H1080 M1200 225 H1245" class="f"/>
+  <text x="750" y="315" text-anchor="middle" class="b">No direct kubectl deploy from Jenkins. Git remains the source of truth.</text>
 
-  <line x1="218" y1="146" x2="268" y2="146" stroke="#64748b" stroke-width="2"/>
-  <polygon points="268,146 258,141 258,151" fill="#64748b"/>
+  <rect x="65" y="390" width="1370" height="370" rx="10" fill="#fbfdf8" stroke="#3f8624" stroke-width="3"/>
+  <text x="90" y="425" class="h2" fill="#3f8624">Continuous Delivery inside AWS</text>
 
-  <rect x="268" y="102" width="130" height="88" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="1.5"/>
-  <text x="333" y="136" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="bold" fill="#e65100">Route 53</text>
-  <text x="333" y="158" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#64748b">DNS + ACM TLS</text>
+  <rect x="110" y="475" width="170" height="105" rx="8" fill="#ef7b4d"/>
+  <text x="195" y="515" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Argo CD</text>
+  <text x="195" y="540" text-anchor="middle" font-size="11" fill="#fff">watches Helm Git</text>
 
-  <line x1="398" y1="146" x2="458" y2="146" stroke="#64748b" stroke-width="2"/>
-  <polygon points="458,146 448,141 448,151" fill="#64748b"/>
+  <rect x="350" y="455" width="1020" height="260" fill="#e4eff7" stroke="#2e73a8" stroke-width="2"/>
+  <text x="375" y="486" class="h2" fill="#2e73a8">Amazon EKS - private subnets</text>
+  <rect x="390" y="520" width="150" height="80" rx="7" fill="#8c4fff"/><text x="465" y="552" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Ingress</text><text x="465" y="575" text-anchor="middle" font-size="10" fill="#fff">ALB controller</text>
+  <rect x="590" y="520" width="150" height="80" rx="7" fill="#8c4fff"/><text x="665" y="552" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">api-gateway</text><text x="665" y="575" text-anchor="middle" font-size="10" fill="#fff">2 pods + UI</text>
+  <rect x="790" y="520" width="120" height="80" rx="7" fill="#f58536"/><text x="850" y="552" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">account</text><text x="850" y="575" text-anchor="middle" font-size="10" fill="#fff">2 pods</text>
+  <rect x="935" y="520" width="120" height="80" rx="7" fill="#f58536"/><text x="995" y="552" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">wallet</text><text x="995" y="575" text-anchor="middle" font-size="10" fill="#fff">2 pods</text>
+  <rect x="1080" y="520" width="120" height="80" rx="7" fill="#f58536"/><text x="1140" y="552" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">payment</text><text x="1140" y="575" text-anchor="middle" font-size="10" fill="#fff">2 pods</text>
+  <rect x="1225" y="520" width="120" height="80" rx="7" fill="#f58536"/><text x="1285" y="552" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">settlement</text><text x="1285" y="575" text-anchor="middle" font-size="10" fill="#fff">2 pods</text>
+  <path d="M280 527 H350 M540 560 H590 M740 560 H790 M910 560 H935 M1055 560 H1080 M1200 560 H1225" class="f"/>
 
-  <rect x="458" y="96" width="682" height="500" rx="14" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
-  <text x="482" y="126" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="bold" fill="#312e81">VPC (Terraform)</text>
-  <text x="482" y="148" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#64748b">2 public + 2 private subnets, IGW, NAT</text>
+  <rect x="590" y="635" width="270" height="55" rx="6" fill="#dd344c"/>
+  <text x="725" y="660" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Secrets Manager + External Secrets</text>
+  <text x="725" y="678" text-anchor="middle" font-size="10" fill="#fff">JWT, DB credentials, internal API key</text>
+  <rect x="920" y="635" width="270" height="55" rx="6" fill="#3b48cc"/>
+  <text x="1055" y="660" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Amazon RDS MySQL 8</text>
+  <text x="1055" y="678" text-anchor="middle" font-size="10" fill="#fff">4 service-owned schemas</text>
 
-  <rect x="482" y="168" width="634" height="90" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="502" y="194" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="bold" fill="#166534">Public subnets</text>
-  <rect x="550" y="204" width="220" height="44" rx="6" fill="#ffffff" stroke="#22c55e"/>
-  <text x="660" y="232" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="bold" fill="#0b1220">Application Load Balancer</text>
-
-  <rect x="482" y="278" width="634" height="298" rx="8" fill="#e0e7ff" stroke="#4f46e5" stroke-width="1.5"/>
-  <text x="502" y="306" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="bold" fill="#312e81">Private subnets - Amazon EKS</text>
-
-  <rect x="506" y="322" width="140" height="48" rx="6" fill="#e0f7fe" stroke="#00baf2" stroke-width="2"/>
-  <text x="576" y="352" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="bold" fill="#0b1220">Ingress</text>
-
-  <line x1="646" y1="346" x2="686" y2="346" stroke="#64748b" stroke-width="2"/>
-  <polygon points="686,346 676,341 676,351" fill="#64748b"/>
-
-  <rect x="686" y="318" width="170" height="56" rx="6" fill="#e0f7fe" stroke="#00baf2" stroke-width="2"/>
-  <text x="771" y="344" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="bold" fill="#0b1220">api-gateway</text>
-  <text x="771" y="362" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#64748b">embedded demo UI</text>
-
-  <rect x="506" y="396" width="108" height="40" rx="5" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="560" y="422" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="bold">account x2</text>
-  <rect x="626" y="396" width="108" height="40" rx="5" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="680" y="422" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="bold">wallet x2</text>
-  <rect x="746" y="396" width="108" height="40" rx="5" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="800" y="422" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="bold">payment x2</text>
-  <rect x="866" y="396" width="108" height="40" rx="5" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="920" y="422" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="bold">settlement x2</text>
-
-  <text x="506" y="462" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#64748b">ClusterIP only; internal /internal/** calls; node group = worker ASG</text>
-
-  <rect x="506" y="480" width="590" height="62" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-  <text x="801" y="508" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="bold" fill="#334155">Amazon RDS MySQL 8</text>
-  <text x="801" y="528" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#64748b">account_db, wallet_db, payment_db, settlement_db</text>
-
-  <rect x="458" y="618" width="190" height="76" rx="8" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="553" y="648" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="bold" fill="#b45309">Secrets Manager</text>
-  <text x="553" y="672" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#64748b">JWT, DB, internal API key</text>
-
-  <rect x="48" y="720" width="1092" height="220" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-  <text x="72" y="754" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="bold" fill="#0b1220">CI/CD (single path)</text>
-
-  <text x="72" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#0b1220">Git</text>
-  <text x="110" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#64748b">-&gt;</text>
-  <text x="132" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#9d174d" font-weight="bold">Jenkins</text>
-  <text x="200" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#64748b">-&gt; mvn test -&gt;</text>
-  <text x="310" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#5b21b6" font-weight="bold">SonarQube</text>
-  <text x="400" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#64748b">-&gt; Docker -&gt;</text>
-  <text x="490" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#92400e" font-weight="bold">Trivy</text>
-  <text x="540" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#64748b">-&gt;</text>
-  <text x="560" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#c2410c" font-weight="bold">ECR</text>
-  <text x="600" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#64748b">-&gt; Helm (Git) -&gt;</text>
-  <text x="720" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#b91c1c" font-weight="bold">Argo CD</text>
-  <text x="800" y="798" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#64748b">-&gt; EKS</text>
-
-  <text x="72" y="836" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#475569">Jenkins builds and scans; Argo CD deploys only. Ansible for Jenkins or Sonar hosts. No S3 java -jar on workers.</text>
-  <text x="72" y="864" font-family="Arial,Helvetica,sans-serif" font-size="12" fill="#94a3b8">CloudWatch logs - IRSA for AWS access</text>
-
-  <rect x="48" y="920" width="380" height="28" rx="4" fill="#e0f7fe"/>
-  <text x="238" y="940" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#0b1220">github.com/suryakant1811/PAYWAVE</text>
+  <path d="M1315 265 V360 H195 V475 M1140 265 V370 H850 V520" class="f"/>
+  <text x="750" y="795" text-anchor="middle" class="b">Terraform provisions AWS. Ansible bootstraps Jenkins/Sonar. Helm defines Kubernetes. Argo CD deploys.</text>
 </svg>

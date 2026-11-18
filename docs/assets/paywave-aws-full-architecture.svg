@@ -1,158 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1100" viewBox="0 0 1400 1100">
-  <title>PayWave Full AWS Architecture</title>
-  <rect width="1400" height="1100" fill="#ffffff"/>
-  <rect width="1400" height="56" fill="#232f3e"/>
-  <text x="48" y="36" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="bold" fill="#ffffff">PayWave on AWS - full architecture to build</text>
-  <text x="1350" y="36" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#aab7b8">Terraform + EKS + RDS + CI/CD</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120">
+  <title>PayWave complete AWS architecture</title>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#232f3e"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #232f3e; }
+      .title { font-size: 24px; font-weight: 700; }
+      .h2 { font-size: 17px; font-weight: 700; }
+      .h3 { font-size: 14px; font-weight: 700; }
+      .body { font-size: 12px; }
+      .small { font-size: 10px; fill: #545b64; }
+      .flow { fill: none; stroke: #232f3e; stroke-width: 2; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: #1f80a9; stroke-width: 2; stroke-dasharray: 7 6; }
+    </style>
+  </defs>
 
-  <!-- Users -->
-  <circle cx="88" cy="120" r="28" fill="#ff9900" stroke="#232f3e" stroke-width="2"/>
-  <text x="88" y="126" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#232f3e">User</text>
-  <text x="88" y="168" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#232f3e">Users</text>
+  <rect width="1600" height="1120" fill="#f2f3f3"/>
+  <rect x="25" y="20" width="1550" height="1080" rx="22" fill="#ffffff" stroke="#232f3e" stroke-width="3"/>
+  <rect x="25" y="20" width="78" height="64" fill="#232f3e"/>
+  <text x="64" y="60" text-anchor="middle" font-size="24" font-weight="700" fill="#ffffff">aws</text>
+  <text x="125" y="60" class="title">AWS Cloud - PayWave Production Architecture</text>
+  <text x="1535" y="58" text-anchor="end" class="body">ap-south-1 | Terraform managed</text>
 
-  <!-- Step 1 Route53 ACM -->
-  <circle cx="200" cy="108" r="14" fill="#232f3e"/>
-  <text x="200" y="113" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">1</text>
-  <rect x="148" y="128" width="130" height="72" rx="6" fill="#fff9e6" stroke="#ff9900" stroke-width="1.5"/>
-  <text x="213" y="156" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#232f3e">Route 53</text>
-  <text x="213" y="176" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">xyz.com</text>
-  <text x="213" y="192" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">ACM TLS</text>
+  <!-- External services -->
+  <g>
+    <circle cx="92" cy="172" r="38" fill="#8c4fff"/>
+    <circle cx="92" cy="160" r="10" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <path d="M70 190 Q92 168 114 190" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="92" y="225" text-anchor="middle" class="h3">Users</text>
 
-  <line x1="116" y1="120" x2="145" y2="150" stroke="#545b64" stroke-width="1.5"/>
-  <line x1="278" y1="164" x2="318" y2="164" stroke="#545b64" stroke-width="1.5"/>
+    <rect x="165" y="130" width="112" height="84" rx="8" fill="#8c4fff"/>
+    <circle cx="221" cy="162" r="20" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <path d="M208 160 L218 170 L237 148" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="221" y="232" text-anchor="middle" class="h3">Route 53</text>
+    <text x="221" y="248" text-anchor="middle" class="small">paywave.example.com</text>
 
-  <!-- Customer VPC boundary -->
-  <rect x="318" y="88" width="1040" height="760" rx="8" fill="#f2f8fd" stroke="#0073bb" stroke-width="2"/>
-  <text x="338" y="118" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#0073bb">Customer VPC (10.0.0.0/16) - Terraform</text>
-  <text x="1050" y="118" font-family="Arial,sans-serif" font-size="11" fill="#545b64">Region e.g. ap-south-1</text>
+    <rect x="315" y="130" width="112" height="84" rx="8" fill="#dd344c"/>
+    <path d="M343 174 h56 M350 160 h42 M360 146 h22" stroke="#ffffff" stroke-width="4"/>
+    <text x="371" y="232" text-anchor="middle" class="h3">AWS WAF</text>
+    <text x="371" y="248" text-anchor="middle" class="small">optional</text>
+  </g>
+  <path d="M130 172 H165" class="flow"/>
+  <path d="M277 172 H315" class="flow"/>
 
-  <!-- IGW -->
-  <rect x="338" y="140" width="120" height="56" rx="6" fill="#ffffff" stroke="#232f3e"/>
-  <text x="398" y="164" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#232f3e">Internet</text>
-  <text x="398" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">Gateway</text>
+  <!-- VPC -->
+  <rect x="465" y="100" width="1070" height="780" fill="#fbfdf8" stroke="#3f8624" stroke-width="3"/>
+  <rect x="465" y="100" width="58" height="58" fill="#3f8624"/>
+  <path d="M478 133 Q494 113 510 133 Q503 143 494 143 Q485 143 478 133" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="540" y="137" class="h2" fill="#3f8624">VPC 10.0.0.0/16</text>
+  <text x="1505" y="136" text-anchor="end" class="body">2 Availability Zones | 4 subnets</text>
 
-  <!-- Public subnet block -->
-  <rect x="338" y="210" width="1000" height="130" rx="6" fill="#e9f5e0" stroke="#1d8102" stroke-width="1.5"/>
-  <text x="358" y="234" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1d8102">Public subnets (2 AZ)</text>
-  <text x="358" y="252" font-family="Arial,sans-serif" font-size="10" fill="#545b64">10.0.1.0/24 AZ-a, 10.0.2.0/24 AZ-b, route to IGW</text>
+  <!-- IGW and ALB -->
+  <g>
+    <circle cx="520" cy="210" r="39" fill="#f58536"/>
+    <path d="M496 216 Q520 188 544 216 Q538 228 526 228 H507 Q498 228 496 216" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="520" y="264" text-anchor="middle" class="h3">Internet Gateway</text>
 
-  <circle cx="430" cy="278" r="14" fill="#232f3e"/>
-  <text x="430" y="283" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">2</text>
-  <rect x="458" y="260" width="200" height="60" rx="6" fill="#ffffff" stroke="#1d8102"/>
-  <text x="558" y="286" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#232f3e">Application Load Balancer</text>
-  <text x="558" y="304" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">HTTPS :443 only</text>
+    <circle cx="710" cy="210" r="39" fill="#f58536"/>
+    <rect x="687" y="193" width="46" height="10" fill="#ffffff"/>
+    <rect x="695" y="210" width="10" height="14" fill="#ffffff"/>
+    <rect x="715" y="210" width="10" height="14" fill="#ffffff"/>
+    <path d="M700 203 V210 M720 203 V210" stroke="#ffffff" stroke-width="3"/>
+    <text x="710" y="264" text-anchor="middle" class="h3">Application Load Balancer</text>
+    <text x="710" y="280" text-anchor="middle" class="small">HTTPS :443 | ACM certificate</text>
+  </g>
+  <path d="M427 172 H480" class="flow"/>
+  <path d="M560 210 H670" class="flow"/>
 
-  <rect x="700" y="260" width="160" height="60" rx="6" fill="#ffffff" stroke="#545b64"/>
-  <text x="780" y="286" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#232f3e">NAT Gateway</text>
-  <text x="780" y="304" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">+ Elastic IP</text>
+  <!-- Availability Zones -->
+  <rect x="495" y="310" width="485" height="535" class="dash"/>
+  <text x="520" y="340" class="h2" fill="#1f80a9">Availability Zone 1 - ap-south-1a</text>
+  <rect x="1005" y="310" width="500" height="535" class="dash"/>
+  <text x="1030" y="340" class="h2" fill="#1f80a9">Availability Zone 2 - ap-south-1b</text>
 
-  <!-- Private subnet block -->
-  <rect x="338" y="360" width="1000" height="380" rx="6" fill="#e8f4fc" stroke="#0073bb" stroke-width="1.5"/>
-  <text x="358" y="384" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#0073bb">Private subnets (2 AZ)</text>
-  <text x="358" y="402" font-family="Arial,sans-serif" font-size="10" fill="#545b64">10.0.11.0/24, 10.0.12.0/24, route to NAT</text>
+  <!-- Public subnets -->
+  <rect x="520" y="370" width="435" height="160" fill="#e8f3e3" stroke="#7aa35a" stroke-width="2"/>
+  <rect x="520" y="370" width="54" height="54" fill="#3f8624"/>
+  <path d="M537 405 v-15 a10 10 0 0 1 20 0 v15 M533 405 h28 v18 h-28z" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="590" y="402" class="h2" fill="#3f8624">Public subnet 1</text>
+  <text x="590" y="423" class="body">10.0.1.0/24</text>
 
-  <!-- EKS box -->
-  <rect x="358" y="420" width="620" height="300" rx="6" fill="#ffffff" stroke="#0073bb" stroke-width="2"/>
-  <text x="378" y="448" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#0073bb">Amazon EKS cluster</text>
+  <rect x="1030" y="370" width="450" height="160" fill="#e8f3e3" stroke="#7aa35a" stroke-width="2"/>
+  <rect x="1030" y="370" width="54" height="54" fill="#3f8624"/>
+  <path d="M1047 405 v-15 a10 10 0 0 1 20 0 v15 M1043 405 h28 v18 h-28z" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="1100" y="402" class="h2" fill="#3f8624">Public subnet 2</text>
+  <text x="1100" y="423" class="body">10.0.2.0/24</text>
 
-  <circle cx="410" cy="478" r="14" fill="#232f3e"/>
-  <text x="410" y="483" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">3</text>
-  <rect x="432" y="462" width="120" height="48" rx="5" fill="#e0f7fe" stroke="#00baf2"/>
-  <text x="492" y="492" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#232f3e">Ingress</text>
+  <!-- NAT gateways -->
+  <g>
+    <rect x="680" y="442" width="68" height="58" fill="#f58536"/>
+    <path d="M697 473 h34 M714 456 v34 M699 460 l15-8 15 8 M699 486 l15 8 15-8" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="770" y="468" class="h3">NAT Gateway</text>
+    <text x="770" y="486" class="small">Elastic IP</text>
+    <rect x="1195" y="442" width="68" height="58" fill="#f58536"/>
+    <path d="M1212 473 h34 M1229 456 v34 M1214 460 l15-8 15 8 M1214 486 l15 8 15-8" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="1285" y="468" class="h3">NAT Gateway</text>
+    <text x="1285" y="486" class="small">Prod HA (optional in dev)</text>
+  </g>
+  <path d="M710 249 V360 H714 V442" class="flow"/>
+  <path d="M710 360 H1229 V442" class="flow"/>
 
-  <circle cx="590" cy="478" r="14" fill="#232f3e"/>
-  <text x="590" y="483" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">4</text>
-  <rect x="612" y="458" width="150" height="56" rx="5" fill="#e0f7fe" stroke="#00baf2" stroke-width="2"/>
-  <text x="687" y="484" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#232f3e">api-gateway</text>
-  <text x="687" y="502" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#545b64">demo UI in image</text>
+  <!-- Private subnets -->
+  <rect x="520" y="560" width="435" height="250" fill="#e4eff7" stroke="#2e73a8" stroke-width="2"/>
+  <rect x="520" y="560" width="54" height="54" fill="#2e73a8"/>
+  <path d="M537 595 v-15 a10 10 0 0 1 20 0 v15 M533 595 h28 v18 h-28z" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="590" y="592" class="h2" fill="#2e73a8">Private subnet 1</text>
+  <text x="590" y="613" class="body">10.0.11.0/24</text>
 
-  <circle cx="410" cy="548" r="14" fill="#232f3e"/>
-  <text x="410" y="553" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">5</text>
-  <text x="378" y="576" font-family="Arial,sans-serif" font-size="11" fill="#545b64">ClusterIP pods (x2 each):</text>
-  <rect x="432" y="540" width="102" height="40" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="483" y="566" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold">account</text>
-  <rect x="548" y="540" width="102" height="40" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="599" y="566" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold">wallet</text>
-  <rect x="664" y="540" width="102" height="40" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="715" y="566" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold">payment</text>
-  <rect x="780" y="540" width="102" height="40" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="831" y="566" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold">settlement</text>
+  <rect x="1030" y="560" width="450" height="250" fill="#e4eff7" stroke="#2e73a8" stroke-width="2"/>
+  <rect x="1030" y="560" width="54" height="54" fill="#2e73a8"/>
+  <path d="M1047 595 v-15 a10 10 0 0 1 20 0 v15 M1043 595 h28 v18 h-28z" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="1100" y="592" class="h2" fill="#2e73a8">Private subnet 2</text>
+  <text x="1100" y="613" class="body">10.0.12.0/24</text>
 
-  <rect x="432" y="600" width="330" height="90" rx="5" fill="#fff5f5" stroke="#ef4444"/>
-  <text x="452" y="624" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">Argo CD (GitOps)</text>
-  <text x="452" y="644" font-family="Arial,sans-serif" font-size="10" fill="#545b64">Watches Helm repo in Git</text>
-  <text x="452" y="662" font-family="Arial,sans-serif" font-size="10" fill="#545b64">Syncs Deployments to this cluster</text>
-  <text x="452" y="680" font-family="Arial,sans-serif" font-size="10" fill="#545b64">IRSA for AWS Load Balancer Controller</text>
+  <!-- EKS worker nodes -->
+  <g>
+    <rect x="640" y="650" width="190" height="115" rx="8" fill="#ffffff" stroke="#8c4fff" stroke-width="2"/>
+    <rect x="655" y="668" width="58" height="58" fill="#8c4fff"/>
+    <polygon points="684,677 703,688 703,710 684,721 665,710 665,688" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="730" y="692" class="h3">EKS worker node</text>
+    <text x="730" y="711" class="small">Gateway + services</text>
+    <text x="730" y="730" class="small">Managed node group</text>
 
-  <!-- RDS -->
-  <circle cx="1050" cy="478" r="14" fill="#232f3e"/>
-  <text x="1050" y="483" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">6</text>
-  <rect x="1000" y="420" width="310" height="120" rx="6" fill="#ffffff" stroke="#3b48cc" stroke-width="2"/>
-  <text x="1155" y="452" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#232f3e">Amazon RDS MySQL 8</text>
-  <text x="1155" y="474" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">DB subnet group (private only)</text>
-  <text x="1155" y="494" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">account_db, wallet_db</text>
-  <text x="1155" y="512" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">payment_db, settlement_db</text>
-  <text x="1155" y="528" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#545b64">SG: 3306 from EKS only</text>
+    <rect x="1155" y="650" width="190" height="115" rx="8" fill="#ffffff" stroke="#8c4fff" stroke-width="2"/>
+    <rect x="1170" y="668" width="58" height="58" fill="#8c4fff"/>
+    <polygon points="1199,677 1218,688 1218,710 1199,721 1180,710 1180,688" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="1245" y="692" class="h3">EKS worker node</text>
+    <text x="1245" y="711" class="small">Gateway + services</text>
+    <text x="1245" y="730" class="small">Managed node group</text>
+  </g>
+  <path d="M710 249 V620 H735 V650" class="flow"/>
+  <path d="M710 620 H1250 V650" class="flow"/>
 
-  <!-- Secrets -->
-  <rect x="1000" y="560" width="310" height="80" rx="6" fill="#fff9e6" stroke="#ff9900"/>
-  <text x="1155" y="588" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#232f3e">Secrets Manager</text>
-  <text x="1155" y="610" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">JWT, DB passwords, INTERNAL_API_KEY</text>
-  <text x="1155" y="628" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">External Secrets Operator to K8s</text>
+  <!-- RDS + Secrets -->
+  <g>
+    <rect x="1360" y="640" width="78" height="78" fill="#3b48cc"/>
+    <ellipse cx="1399" cy="660" rx="22" ry="8" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <path d="M1377 660 v30 c0 12 44 12 44 0 v-30" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <text x="1399" y="742" text-anchor="middle" class="h3">RDS MySQL</text>
+    <text x="1399" y="759" text-anchor="middle" class="small">4 schemas</text>
 
-  <!-- Ops EC2 optional -->
-  <rect x="358" y="760" width="300" height="76" rx="6" fill="#ffffff" stroke="#545b64"/>
-  <text x="508" y="788" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#232f3e">Optional: EC2 private</text>
-  <text x="508" y="808" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#545b64">Jenkins, SonarQube (Ansible bootstrap)</text>
-  <text x="508" y="824" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#545b64">SSM Session Manager, no SSH keys</text>
+    <rect x="1360" y="180" width="78" height="78" fill="#dd344c"/>
+    <circle cx="1399" cy="212" r="14" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <path d="M1399 226 v18 M1399 238 h16" stroke="#ffffff" stroke-width="3"/>
+    <text x="1399" y="280" text-anchor="middle" class="h3">Secrets Manager</text>
+    <text x="1399" y="297" text-anchor="middle" class="small">JWT, DB, API key</text>
+  </g>
+  <path d="M1345 708 H1360" class="flow"/>
 
-  <!-- CI/CD strip below VPC -->
-  <rect x="48" y="870" width="1310" height="200" rx="8" fill="#fafafa" stroke="#232f3e" stroke-width="1.5"/>
-  <text x="72" y="902" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#232f3e">CI/CD and shared services (same region)</text>
+  <!-- CI/CD -->
+  <rect x="75" y="920" width="1450" height="140" rx="8" fill="#f7f7f7" stroke="#8a8d90" stroke-width="2"/>
+  <text x="100" y="952" class="h2">CI/CD and GitOps</text>
+  <g>
+    <rect x="115" y="975" width="120" height="58" rx="6" fill="#24292f"/>
+    <text x="175" y="1010" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">GitHub</text>
+    <rect x="285" y="975" width="120" height="58" rx="6" fill="#d33833"/>
+    <text x="345" y="1010" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Jenkins</text>
+    <rect x="455" y="975" width="120" height="58" rx="6" fill="#4e9bba"/>
+    <text x="515" y="1002" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Maven</text>
+    <text x="515" y="1018" text-anchor="middle" font-size="10" fill="#ffffff">test + package</text>
+    <rect x="625" y="975" width="120" height="58" rx="6" fill="#4e9bba"/>
+    <text x="685" y="1010" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">SonarQube</text>
+    <rect x="795" y="975" width="120" height="58" rx="6" fill="#0f7c90"/>
+    <text x="855" y="1002" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Docker + Trivy</text>
+    <text x="855" y="1018" text-anchor="middle" font-size="10" fill="#ffffff">build + scan</text>
+    <rect x="965" y="975" width="120" height="58" rx="6" fill="#f58536"/>
+    <text x="1025" y="1010" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Amazon ECR</text>
+    <rect x="1135" y="975" width="120" height="58" rx="6" fill="#0f7c90"/>
+    <text x="1195" y="1010" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Helm Git</text>
+    <rect x="1305" y="975" width="120" height="58" rx="6" fill="#ef7b4d"/>
+    <text x="1365" y="1010" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Argo CD</text>
+  </g>
+  <path d="M235 1004 H285 M405 1004 H455 M575 1004 H625 M745 1004 H795 M915 1004 H965 M1085 1004 H1135 M1255 1004 H1305" class="flow"/>
+  <path d="M1365 975 V865 H830 V765" class="flow"/>
 
-  <circle cx="100" cy="940" r="14" fill="#232f3e"/>
-  <text x="100" y="945" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">7</text>
-  <rect x="122" y="922" width="72" height="44" rx="5" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="158" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Git</text>
-
-  <circle cx="230" cy="940" r="14" fill="#232f3e"/>
-  <text x="230" y="945" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">8</text>
-  <rect x="252" y="922" width="100" height="44" rx="5" fill="#fce7f3" stroke="#db2777"/>
-  <text x="302" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#9d174d">Jenkins</text>
-
-  <circle cx="380" cy="940" r="14" fill="#232f3e"/>
-  <text x="380" y="945" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">9</text>
-  <rect x="402" y="922" width="120" height="44" rx="5" fill="#ede9fe" stroke="#7c3aed"/>
-  <text x="462" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#5b21b6">SonarQube</text>
-
-  <rect x="548" y="922" width="100" height="44" rx="5" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="598" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold">Trivy</text>
-
-  <circle cx="690" cy="940" r="14" fill="#232f3e"/>
-  <text x="690" y="945" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">10</text>
-  <rect x="712" y="922" width="88" height="44" rx="5" fill="#ffedd5" stroke="#ea580c"/>
-  <text x="756" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#c2410c">ECR</text>
-  <text x="756" y="888" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#545b64">5 repos</text>
-
-  <rect x="830" y="922" width="80" height="44" rx="5" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="870" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold">Helm</text>
-
-  <circle cx="940" cy="940" r="14" fill="#232f3e"/>
-  <text x="940" y="945" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#ffffff">11</text>
-  <rect x="962" y="922" width="88" height="44" rx="5" fill="#fee2e2" stroke="#ef4444"/>
-  <text x="1006" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#b91c1c">Argo CD</text>
-
-  <rect x="1080" y="922" width="120" height="44" rx="5" fill="#e0e7ff" stroke="#4f46e5"/>
-  <text x="1140" y="950" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#312e81">EKS deploy</text>
-
-  <text x="72" y="990" font-family="Arial,sans-serif" font-size="12" fill="#545b64">Terraform also creates: S3 state bucket, DynamoDB lock, IAM roles, security groups, CloudWatch log groups</text>
-  <text x="72" y="1016" font-family="Arial,sans-serif" font-size="11" fill="#545b64">Ansible: bootstrap Jenkins or Sonar EC2 only. App config: Helm values, not Ansible on pods.</text>
-  <text x="72" y="1042" font-family="Arial,sans-serif" font-size="11" fill="#0073bb">docs/aws-architecture.md | github.com/suryakant1811/PAYWAVE</text>
-
-  <!-- arrows ALB to ingress -->
-  <line x1="658" y1="290" x2="658" y2="358" stroke="#545b64" stroke-width="1.5" stroke-dasharray="4"/>
-  <line x1="658" y1="358" x2="492" y2="458" stroke="#545b64" stroke-width="1.5"/>
-  <polygon points="492,458 500,452 500,464" fill="#545b64"/>
-  <line x1="831" y1="580" x2="1000" y2="480" stroke="#545b64" stroke-width="1.5"/>
+  <text x="800" y="1090" text-anchor="middle" class="small">Only the ALB is public. EKS nodes and RDS stay in private subnets. Jenkins builds; Argo CD deploys.</text>
 </svg>

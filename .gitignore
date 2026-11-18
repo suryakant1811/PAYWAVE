@@ -1,3 +1,26 @@
+# --- Terraform (never commit local state / secrets; state lives in S3 backend) ---
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+crash.log
+crash.*.log
+*.tfplan
+*.tfplan.*
+.terraform.tfstate.lock.info
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+.terraformrc
+terraform.rc
+
+# Keep .terraform.lock.hcl in Git (provider version lock).
+
 target/
 .idea/
 *.iml

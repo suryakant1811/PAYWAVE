@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">PayWave Application Architecture</title>
+  <desc id="desc">Five Spring Boot microservices behind one API gateway, each with its own MySQL database.</desc>
+  <defs>
+    <linearGradient id="hero" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00baf2;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:0.05"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0b1220" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <rect width="1200" height="120" fill="url(#hero)"/>
+  <text x="48" y="52" font-family="system-ui,Segoe UI,sans-serif" font-size="36" font-weight="700" fill="#0b1220">PayWave</text>
+  <text x="48" y="88" font-family="system-ui,Segoe UI,sans-serif" font-size="18" fill="#475569">Paytm-style digital wallet &amp; payments · Java 21 · Spring Boot microservices</text>
+  <text x="900" y="58" font-family="system-ui,Segoe UI,sans-serif" font-size="14" fill="#64748b" text-anchor="end">Application layer (runtime)</text>
+
+  <!-- Clients -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="160" width="160" height="88" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <text x="128" y="198" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="600" fill="#0b1220">Clients</text>
+    <text x="128" y="222" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#64748b">Browser · Mobile · API</text>
+  </g>
+
+  <line x1="208" y1="204" x2="268" y2="204" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="238" y="192" text-anchor="middle" font-size="11" fill="#64748b">HTTPS</text>
+
+  <!-- Gateway -->
+  <g filter="url(#shadow)">
+    <rect x="268" y="140" width="200" height="128" rx="12" fill="#e0f7fe" stroke="#00baf2" stroke-width="2"/>
+    <text x="368" y="178" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#0b1220">api-gateway</text>
+    <text x="368" y="202" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#475569">:8080 · single public entry</text>
+    <text x="368" y="224" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#64748b">JWT · rate limit · routing</text>
+    <text x="368" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#0891b2">Demo UI at /</text>
+  </g>
+
+  <!-- Services row -->
+  <g font-family="system-ui,sans-serif">
+    <g filter="url(#shadow)">
+      <rect x="520" y="148" width="148" height="108" rx="10" fill="#fff" stroke="#cbd5e1"/>
+      <text x="594" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#0b1220">account</text>
+      <text x="594" y="198" text-anchor="middle" font-size="11" fill="#64748b">:8081</text>
+      <text x="594" y="220" text-anchor="middle" font-size="10" fill="#64748b">auth · profile</text>
+      <text x="594" y="238" text-anchor="middle" font-size="10" fill="#64748b">notifications</text>
+    </g>
+    <g filter="url(#shadow)">
+      <rect x="688" y="148" width="148" height="108" rx="10" fill="#fff" stroke="#cbd5e1"/>
+      <text x="762" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#0b1220">wallet</text>
+      <text x="762" y="198" text-anchor="middle" font-size="11" fill="#64748b">:8082</text>
+      <text x="762" y="220" text-anchor="middle" font-size="10" fill="#64748b">balances</text>
+      <text x="762" y="238" text-anchor="middle" font-size="10" fill="#64748b">double-entry ledger</text>
+    </g>
+    <g filter="url(#shadow)">
+      <rect x="856" y="148" width="148" height="108" rx="10" fill="#fff" stroke="#cbd5e1"/>
+      <text x="930" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#0b1220">payment</text>
+      <text x="930" y="198" text-anchor="middle" font-size="11" fill="#64748b">:8083</text>
+      <text x="930" y="220" text-anchor="middle" font-size="10" fill="#64748b">top-up · transfer</text>
+      <text x="930" y="238" text-anchor="middle" font-size="10" fill="#64748b">merchant · refunds</text>
+    </g>
+    <g filter="url(#shadow)">
+      <rect x="1024" y="148" width="128" height="108" rx="10" fill="#fff" stroke="#cbd5e1"/>
+      <text x="1088" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#0b1220">settlement</text>
+      <text x="1088" y="198" text-anchor="middle" font-size="11" fill="#64748b">:8084</text>
+      <text x="1088" y="220" text-anchor="middle" font-size="10" fill="#64748b">merchant</text>
+      <text x="1088" y="238" text-anchor="middle" font-size="10" fill="#64748b">daily payout</text>
+    </g>
+  </g>
+
+  <line x1="468" y1="204" x2="518" y2="204" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="493" y="192" font-size="10" fill="#64748b">/api/v1</text>
+
+  <!-- Databases -->
+  <g font-family="system-ui,sans-serif" font-size="11" fill="#64748b">
+    <rect x="520" y="300" width="148" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="594" y="334" text-anchor="middle" font-weight="600" fill="#334155">account_db</text>
+    <line x1="594" y1="256" x2="594" y2="300" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="688" y="300" width="148" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="762" y="334" text-anchor="middle" font-weight="600" fill="#334155">wallet_db</text>
+    <line x1="762" y1="256" x2="762" y2="300" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="856" y="300" width="148" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="930" y="334" text-anchor="middle" font-weight="600" fill="#334155">payment_db</text>
+    <line x1="930" y1="256" x2="930" y2="300" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <rect x="1024" y="300" width="128" height="56" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="1088" y="334" text-anchor="middle" font-weight="600" fill="#334155">settlement_db</text>
+    <line x1="1088" y1="256" x2="1088" y2="300" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Internal comms box -->
+  <rect x="48" y="400" width="1104" height="268" rx="14" fill="#fff" stroke="#e2e8f0" filter="url(#shadow)"/>
+  <text x="72" y="432" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#0b1220">Service-to-service communication</text>
+  <text x="72" y="458" font-family="system-ui,sans-serif" font-size="13" fill="#475569">Synchronous: REST on /internal/** with X-Internal-Api-Key · Gateway blocks /internal from the internet</text>
+  <text x="72" y="482" font-family="system-ui,sans-serif" font-size="13" fill="#475569">Async (optional): outbox ’ HTTP events ’ account-service notifications (PAYWAVE_MESSAGING_MODE=http)</text>
+
+  <!-- Flow chips -->
+  <g font-family="system-ui,sans-serif" font-size="12">
+    <rect x="72" y="508" width="120" height="36" rx="18" fill="#e0f7fe" stroke="#00baf2"/>
+    <text x="132" y="531" text-anchor="middle" fill="#0b1220">Register</text>
+    <text x="202" y="531" fill="#94a3b8">’</text>
+    <rect x="212" y="508" width="100" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="262" y="531" text-anchor="middle">Login</text>
+    <text x="322" y="531" fill="#94a3b8">’</text>
+    <rect x="332" y="508" width="110" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="387" y="531" text-anchor="middle">Top-up</text>
+    <text x="452" y="531" fill="#94a3b8">’</text>
+    <rect x="462" y="508" width="120" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="522" y="531" text-anchor="middle">Transfer</text>
+    <text x="592" y="531" fill="#94a3b8">’</text>
+    <rect x="602" y="508" width="130" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="667" y="531" text-anchor="middle">Pay merchant</text>
+    <text x="742" y="531" fill="#94a3b8">’</text>
+    <rect x="752" y="508" width="100" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="802" y="531" text-anchor="middle">Refund</text>
+    <text x="862" y="531" fill="#94a3b8">’</text>
+    <rect x="872" y="508" width="120" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="932" y="531" text-anchor="middle">Settlement</text>
+  </g>
+
+  <!-- internal arrows simplified -->
+  <text x="72" y="580" font-family="system-ui,sans-serif" font-size="12" fill="#334155">account</text>
+  <text x="130" y="580" fill="#64748b">&#8594; wallet (create wallet)</text>
+  <text x="72" y="608" font-family="system-ui,sans-serif" font-size="12" fill="#334155">payment</text>
+  <text x="130" y="608" fill="#64748b">&#8594; wallet (debit/credit) · settlement &#8594; payment + wallet</text>
+  <text x="72" y="636" font-family="system-ui,sans-serif" font-size="11" fill="#94a3b8">Simulated payments only · not connected to real banks or UPI</text>
+</svg>

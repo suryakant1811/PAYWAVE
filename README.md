@@ -60,6 +60,14 @@ This repository was written on a machine without Java or Maven, so it has not be
 - Add-money amounts whose paise are `.13` are declined. Amounts whose paise are `.14` stay pending and do not move money.
 - A settled payment cannot be refunded.
 
+## Architecture diagrams
+
+![PayWave microservices](docs/assets/paywave-microservices-architecture.svg)
+
+![PayWave AWS target platform](docs/assets/paywave-aws-devops-architecture.svg)
+
+See [docs/assets/README.md](docs/assets/README.md) for LinkedIn PNG export tips.
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)

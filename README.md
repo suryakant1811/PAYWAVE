@@ -21,7 +21,7 @@ A customer signs up and immediately receives a wallet. Adding money, sending mon
 | settlement-service | 8084 | settlement_db | Merchant settlement for one day |
 | web-ui-service | 8090 | none | Demo wallet UI (served publicly via gateway `/`) |
 
-Clients call the gateway. Open `http://<host>:8080/` in a browser for the demo UI (register, login, top-up, transfer, history). The root path used to return `UNAUTHORIZED` JSON; the gateway now proxies `/`, `/css/**`, and `/js/**` to web-ui-service without a JWT. The gateway checks the JWT and forwards `/api/v1/auth`, `/api/v1/users`, and `/api/v1/notifications` to account-service; `/api/v1/wallets` and `/api/v1/ledger` to wallet-service; `/api/v1/payments`, `/api/v1/transactions`, `/api/v1/merchants`, and `/api/v1/refunds` to payment-service; and `/api/v1/settlements` to settlement-service.
+Clients call the gateway. Open `http://<host>:8080/` in a browser for the demo UI (HTML is **embedded in the gateway JAR** — no need to run web-ui-service on EC2). Optional **web-ui-service** is the same static files as a separate process for local dev. The gateway checks the JWT and forwards `/api/v1/auth`, `/api/v1/users`, and `/api/v1/notifications` to account-service; `/api/v1/wallets` and `/api/v1/ledger` to wallet-service; `/api/v1/payments`, `/api/v1/transactions`, `/api/v1/merchants`, and `/api/v1/refunds` to payment-service; and `/api/v1/settlements` to settlement-service.
 
 ## Run one service
 

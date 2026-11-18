@@ -59,7 +59,8 @@ public class GatewayConfig {
                         .pathMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
                         .pathMatchers("/actuator/health", "/actuator/health/**", "/actuator/info", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         .pathMatchers("/internal/**").denyAll()
-                        .anyExchange().authenticated())
+                        .pathMatchers("/api/**").authenticated()
+                        .anyExchange().permitAll())
                 .addFilterAt(jwtFilter(jwtService), SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
@@ -143,6 +144,9 @@ public class GatewayConfig {
         @Override
         public Mono<Void> filter(ServerWebExchange exchange, org.springframework.cloud.gateway.filter.GatewayFilterChain chain) {
             String path = exchange.getRequest().getURI().getPath();
+            if (UiPaths.isPublicGet(path)) {
+                return chain.filter(exchange);
+            }
             boolean auth = path.startsWith("/api/v1/auth");
             String ip = clientIp(exchange);
             if (!limiter.allow(ip + (auth ? ":auth" : ":api"), auth ? authLimit : defaultLimit, Instant.now())) {

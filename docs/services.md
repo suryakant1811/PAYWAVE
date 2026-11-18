@@ -2,11 +2,11 @@
 
 ## api-gateway
 
-The single public door. It routes each `/api/v1` prefix to one of the four applications, checks the JWT, applies CORS, copies or creates `X-Correlation-Id`, limits requests per IP, and turns gateway failures into the same JSON envelope the services use. Register, login, refresh, and logout are public. The HTML demo UI at `/`, `/css/**`, and `/js/**` is proxied to **web-ui-service** (port 8090) and is also public. Everything under `/internal/**` is denied here.
+The single public door. It routes each `/api/v1` prefix to one of the four applications, checks the JWT, applies CORS, copies or creates `X-Correlation-Id`, limits requests per IP, and turns gateway failures into the same JSON envelope the services use. Register, login, refresh, and logout are public. The demo UI at `/`, `/css/**`, and `/js/**` is served from static files **inside the gateway JAR** (no JWT). Only `/api/**` requires a bearer token. Everything under `/internal/**` is denied here.
 
-## web-ui-service
+## web-ui-service (optional)
 
-Bare-minimum browser demo for stakeholders. Serves static HTML/JS only. The UI calls the same APIs through the gateway with the JWT stored in the browser session. Heap footprint is small (~128 MB). No MySQL.
+Same static demo as the gateway embed. Use for local development if you prefer a separate front-end process; **EC2 demos only need to rebuild and restart api-gateway**.
 
 ## account-service
 

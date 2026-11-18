@@ -20,7 +20,20 @@ export DB_URL='jdbc:mysql://localhost:3306/wallet_db?useSSL=false&allowPublicKey
 mvn -pl wallet-service -am spring-boot:run
 ```
 
-Start account-service, wallet-service, payment-service, and settlement-service, then the gateway on port 8080. The gateway is the URL the client should use.
+Start account-service, wallet-service, payment-service, and settlement-service, then the gateway on port 8080. The gateway is the URL the client should use. Open `http://localhost:8080/` for the embedded demo UI (no extra UI process).
+
+## EC2: fat JAR check
+
+If `java -jar api-gateway/target/api-gateway-1.0.0.jar` exits immediately and `curl` cannot connect to 8080, the JAR is probably too small (thin JAR, often ~15 KiB). A runnable gateway JAR is tens of megabytes and contains `BOOT-INF/lib/`.
+
+```bash
+mvn -pl api-gateway -am clean package -DskipTests   # do not use -q until this works
+./scripts/verify-fat-jar.sh api-gateway/target/api-gateway-1.0.0.jar
+ls -lh api-gateway/target/api-gateway-1.0.0.jar
+tail -80 logs/gateway.log
+```
+
+After a code change on your laptop, **commit and push**, then `git pull` on EC2. If `git pull` says “Already up to date” but the UI still fails, the laptop changes are not on GitHub yet.
 
 Leave `PAYWAVE_MESSAGING_MODE` unset to log domain events. Set it to `http` on wallet-service, payment-service, and settlement-service when you want those events stored as notifications. Set it to `kafka` only after a broker exists and the topic `paywave.domain-events` is created. Account-service listens on that topic in kafka mode.
 

@@ -15,7 +15,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-south-1"
+  region = "us-east-1"
 }
 
 resource "aws_vpc" "prod-vpc" {
@@ -27,28 +27,28 @@ resource "aws_vpc" "prod-vpc" {
 resource "aws_subnet" "prod-subnet-public-01" {
   vpc_id = aws_vpc.prod-vpc.id
   cidr_block = "10.0.1.0/24"
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-east-1a"
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "prod-subnet-public-02" {
   vpc_id = aws_vpc.prod-vpc.id
   cidr_block = "10.0.2.0/24"
-  availability_zone = "ap-south-1b"
+  availability_zone = "us-east-1b"
   map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "prod-subnet-private-01" {
   vpc_id = aws_vpc.prod-vpc.id
   cidr_block = "10.0.11.0/24"
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-east-1a"
   map_public_ip_on_launch = false
 }
 
 resource "aws_subnet" "prod-subnet-private-02" {
   vpc_id = aws_vpc.prod-vpc.id
   cidr_block = "10.0.4.0/24"
-  availability_zone = "ap-south-1b"
+  availability_zone = "us-east-1b"
   map_public_ip_on_launch = false
 }
 
@@ -158,7 +158,7 @@ resource "aws_db_instance" "prod-mysql-db" {
   allocated_storage = 20
   storage_type = "gp2"
   backup_retention_period = 0
-  db_name = "prod-mysql-db"
+  db_name = "prodmysqldb"
   username = "admin"
   password = "admin123"
   db_subnet_group_name = aws_db_subnet_group.prod-db-subnet-group.name

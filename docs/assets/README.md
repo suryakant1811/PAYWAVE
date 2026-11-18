@@ -12,7 +12,14 @@ Use these files in the repo and for social posts (GitHub, LinkedIn).
 
 ## GitHub
 
-The README uses **PNG** files. GitHub often shows *Invalid image source* for embedded **SVG** in README; use PNG for the repo, SVG for editing.
+The README uses **PNG** for inline images. GitHub often shows *Invalid image source* for `![](*.svg)` in README (security sanitizer).
+
+**See SVG locally (Cursor):**
+
+1. Open `docs/assets/preview.html` in a browser (best check before push).
+2. Or open `paywave-*.svg` → right-click → **Open Preview** / built-in SVG preview.
+
+**See SVG on GitHub:** click the `.svg` file in the repo (GitHub renders the file viewer). Do not rely on README `![](file.svg)`.
 
 ```markdown
 ![PayWave microservices](docs/assets/paywave-microservices-architecture.png)

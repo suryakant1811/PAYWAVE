@@ -44,9 +44,13 @@ Gateway routes: `/api/v1/auth`, `/users`, `/notifications` → account; `/wallet
 
 ## Architecture (application)
 
-GitHub does not always render SVG in the README, so diagrams are **PNG** (and **Mermaid** below).
+**View diagrams in Cursor:** open [`docs/assets/preview.html`](docs/assets/preview.html) in a browser, or open the `.svg` files and use **SVG Preview**.  
+GitHub README [blocks many embedded SVGs](https://github.blog/changelog/2023-01-11-svg-support-for-github-readmes/); PNG below always works. Vector sources are linked.
 
-![PayWave microservices architecture](docs/assets/paywave-microservices-architecture.png)
+| | README (PNG) | Vector (SVG) |
+| --- | --- | --- |
+| Application | ![PayWave microservices](docs/assets/paywave-microservices-architecture.png) | [paywave-microservices-architecture.svg](docs/assets/paywave-microservices-architecture.svg) |
+| AWS / DevOps | *(see next section)* | [paywave-aws-devops-architecture.svg](docs/assets/paywave-aws-devops-architecture.svg) |
 
 ```mermaid
 flowchart LR
@@ -65,7 +69,7 @@ flowchart LR
   SET -. internal REST .-> WAL
 ```
 
-Editable sources: [SVG microservices](docs/assets/paywave-microservices-architecture.svg) · [simple overview PNG](image.png)
+Also: [image.png](image.png) (simple non-technical overview).
 
 ---
 
@@ -73,7 +77,9 @@ Editable sources: [SVG microservices](docs/assets/paywave-microservices-architec
 
 Target: run PayWave on **AWS** with **Terraform** (infrastructure), **EKS** (runtime), **RDS** (MySQL), **ECR** (images), **GitOps** (Helm + **Argo CD**), and **Jenkins** with **SonarQube** + **Trivy** in the pipeline. **Ansible** is for bootstrapping hosts (Jenkins/Sonar agents), not for app pod config—that is **Helm**.
 
-Full roadmap: **[docs/aws-devops-roadmap.md](docs/aws-devops-roadmap.md)**
+Full roadmap: **[docs/aws-devops-roadmap.md](docs/aws-devops-roadmap.md)**  
+**VPC / everything to create in AWS:** **[docs/aws-architecture.md](docs/aws-architecture.md)** + [full diagram SVG](docs/assets/paywave-aws-full-architecture.svg)  
+**Build order (EKS + Argo last):** **[docs/aws-build-order.md](docs/aws-build-order.md)**
 
 ![PayWave on AWS — target platform](docs/assets/paywave-aws-devops-architecture.png)
 

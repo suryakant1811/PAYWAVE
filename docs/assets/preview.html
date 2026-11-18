@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PayWave architecture diagrams (SVG preview)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; background: #f1f5f9; color: #0b1220; }
+    h1 { font-size: 1.5rem; }
+    p { max-width: 720px; line-height: 1.5; color: #475569; }
+  a { color: #0891b2; }
+    section { margin: 32px 0; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
+    img { max-width: 100%; height: auto; display: block; margin-top: 12px; }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>PayWave SVG diagrams</h1>
+  <p>
+    Open this file in a browser before pushing to GitHub:
+    <code>open docs/assets/preview.html</code> (Mac) or double-click in file manager.
+    In <strong>Cursor</strong>: right-click each <code>.svg</code> → <strong>Open Preview</strong>, or open this HTML file.
+  </p>
+  <p>
+    <strong>GitHub README:</strong> embedded <code>![...](file.svg)</code> is often blocked; use PNG in README or click the SVG file on GitHub to view it.
+  </p>
+
+  <section>
+    <h2>Application architecture</h2>
+    <a href="paywave-microservices-architecture.svg">paywave-microservices-architecture.svg</a>
+    <img src="paywave-microservices-architecture.svg" alt="PayWave microservices architecture" />
+  </section>
+
+  <section>
+    <h2>AWS and DevOps target</h2>
+    <a href="paywave-aws-devops-architecture.svg">paywave-aws-devops-architecture.svg</a>
+    <img src="paywave-aws-devops-architecture.svg" alt="PayWave AWS architecture" />
+  </section>
+
+  <section>
+    <h2>Full AWS build (VPC blocks + numbered steps)</h2>
+    <p>Detailed checklist: <a href="../aws-architecture.md">aws-architecture.md</a></p>
+    <a href="paywave-aws-full-architecture.svg">paywave-aws-full-architecture.svg</a>
+    <img src="paywave-aws-full-architecture.svg" alt="PayWave full AWS VPC architecture" />
+  </section>
+</body>
+</html>

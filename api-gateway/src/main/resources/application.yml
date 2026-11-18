@@ -9,6 +9,11 @@ spring:
         connect-timeout: 2000
         response-timeout: 10s
       routes:
+        - id: web-ui
+          order: -100
+          uri: ${WEB_UI_URL:http://localhost:8090}
+          predicates:
+            - Path=/,/index.html,/css/**,/js/**
         - id: account-auth
           uri: ${ACCOUNT_SERVICE_URL:http://localhost:8081}
           predicates:

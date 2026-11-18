@@ -19,6 +19,7 @@
         <module>wallet-service</module>
         <module>payment-service</module>
         <module>settlement-service</module>
+        <module>web-ui-service</module>
     </modules>
 
     <properties>

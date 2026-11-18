@@ -2,7 +2,7 @@
 
 PayWave is a Paytm-style wallet and payments backend. A customer can register, hold a wallet, add money through a simulated gateway, pay another customer, pay a merchant, see history, request a refund, and run a merchant settlement.
 
-The application is five processes. There are no Dockerfiles in this repository. Add those yourself when you deploy.
+The application is five backend processes plus an optional **web-ui-service** (static demo UI, no database). There are no Dockerfiles in this repository. Add those yourself when you deploy.
 
 Sample passwords in `.env.example` are for a private development host. This code does not talk to a real bank, card network, or UPI.
 
@@ -19,8 +19,9 @@ A customer signs up and immediately receives a wallet. Adding money, sending mon
 | wallet-service | 8082 | wallet_db | Wallet balances and the double-entry ledger |
 | payment-service | 8083 | payment_db | Payments, merchants, history, and refunds |
 | settlement-service | 8084 | settlement_db | Merchant settlement for one day |
+| web-ui-service | 8090 | none | Demo wallet UI (served publicly via gateway `/`) |
 
-Clients call the gateway. The gateway checks the JWT and forwards `/api/v1/auth`, `/api/v1/users`, and `/api/v1/notifications` to account-service; `/api/v1/wallets` and `/api/v1/ledger` to wallet-service; `/api/v1/payments`, `/api/v1/transactions`, `/api/v1/merchants`, and `/api/v1/refunds` to payment-service; and `/api/v1/settlements` to settlement-service.
+Clients call the gateway. Open `http://<host>:8080/` in a browser for the demo UI (register, login, top-up, transfer, history). The root path used to return `UNAUTHORIZED` JSON; the gateway now proxies `/`, `/css/**`, and `/js/**` to web-ui-service without a JWT. The gateway checks the JWT and forwards `/api/v1/auth`, `/api/v1/users`, and `/api/v1/notifications` to account-service; `/api/v1/wallets` and `/api/v1/ledger` to wallet-service; `/api/v1/payments`, `/api/v1/transactions`, `/api/v1/merchants`, and `/api/v1/refunds` to payment-service; and `/api/v1/settlements` to settlement-service.
 
 ## Run one service
 

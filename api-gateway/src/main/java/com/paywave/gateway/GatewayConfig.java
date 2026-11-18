@@ -56,6 +56,7 @@ public class GatewayConfig {
                         .accessDeniedHandler((exchange, exception) -> write(exchange, objectMapper, 403, "FORBIDDEN", "You do not have permission to perform this action")))
                 .authorizeExchange(auth -> auth
                         .pathMatchers(HttpMethod.POST, "/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout").permitAll()
+                        .pathMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
                         .pathMatchers("/actuator/health", "/actuator/health/**", "/actuator/info", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         .pathMatchers("/internal/**").denyAll()
                         .anyExchange().authenticated())

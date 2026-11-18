@@ -27,11 +27,15 @@ Start account-service, wallet-service, payment-service, and settlement-service, 
 If `java -jar api-gateway/target/api-gateway-1.0.0.jar` exits immediately and `curl` cannot connect to 8080, the JAR is probably too small (thin JAR, often ~15 KiB). A runnable gateway JAR is tens of megabytes and contains `BOOT-INF/lib/`.
 
 ```bash
-mvn -pl api-gateway -am clean package -DskipTests   # do not use -q until this works
+./scripts/build-fat-jars.sh
+# or only the gateway:
+mvn -pl api-gateway -am clean package -DskipTests
+mvn -pl api-gateway spring-boot:repackage
 ./scripts/verify-fat-jar.sh api-gateway/target/api-gateway-1.0.0.jar
 ls -lh api-gateway/target/api-gateway-1.0.0.jar
-tail -80 logs/gateway.log
 ```
+
+If the JAR is only ~25 KiB, `spring-boot:repackage` did not run. This repo does not use `spring-boot-starter-parent`, so each service module must bind the repackage goal (see parent `pom.xml`). After upgrading the POM, run `git pull` and `build-fat-jars.sh` again.
 
 After a code change on your laptop, **commit and push**, then `git pull` on EC2. If `git pull` says “Already up to date” but the UI still fails, the laptop changes are not on GitHub yet.
 

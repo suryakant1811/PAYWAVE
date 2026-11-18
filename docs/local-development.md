@@ -28,9 +28,8 @@ If `java -jar api-gateway/target/api-gateway-1.0.0.jar` exits immediately and `c
 
 ```bash
 ./scripts/build-fat-jars.sh
-# or only the gateway:
+# or only the gateway (look for spring-boot-maven-plugin:repackage in the log):
 mvn -pl api-gateway -am clean package -DskipTests
-mvn -pl api-gateway spring-boot:repackage
 ./scripts/verify-fat-jar.sh api-gateway/target/api-gateway-1.0.0.jar
 ls -lh api-gateway/target/api-gateway-1.0.0.jar
 ```

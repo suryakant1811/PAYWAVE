@@ -11,6 +11,7 @@ SIZE=$(wc -c <"$JAR" | tr -d ' ')
 if [[ "$SIZE" -lt "$MIN_BYTES" ]]; then
   echo "FAIL $JAR is only ${SIZE} bytes — not a fat JAR." >&2
   echo "Run: mvn -pl <module> -am clean package -DskipTests" >&2
+  echo "Do not run spring-boot:repackage alone — it fails after package already repackaged." >&2
   echo "Then check for BOOT-INF/lib inside the JAR." >&2
   exit 1
 fi

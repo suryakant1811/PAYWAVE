@@ -9,9 +9,7 @@ VERIFY="${ROOT}/scripts/verify-fat-jar.sh"
 
 for module in "${MODULES[@]}"; do
   echo "==> $module"
-  mvn -pl "$module" -am package -DskipTests
-  # Idempotent if repackage already ran during package
-  mvn -q -pl "$module" spring-boot:repackage
+  mvn -pl "$module" -am clean package -DskipTests
   jar="${ROOT}/${module}/target/${module}-1.0.0.jar"
   "$VERIFY" "$jar"
 done

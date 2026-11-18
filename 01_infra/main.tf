@@ -188,118 +188,93 @@ resource "aws_ecr_repository" "prod-ecr-repos" {
   image_tag_mutability = "MUTABLE"
 }
 
-data "aws_caller_identity" "current" {}
+# eks creation 
 
-data "aws_region" "current" {}
+# but first we need to create the iam role for EKS Cluster (EKS Cluster IAM Role : AmazonEKSClusterPolicy) and EKS Node (EKS Node Group IAM Role: AmazonEKSWorkerNodePolicy, AmazonEC2ContainerRegistryPullOnly, AmazonEKS_CNI_Policy)
 
-output "aws_account_id" {
-  description = "AWS account ID used for this apply"
-  value       = data.aws_caller_identity.current.account_id
+resource "aws_iam_role" "prod-eks-cluster-role" {
+  name = "prod-eks-cluster-role"
+  assume_role_policy = jsonencode({
+    "Version" = "2012-10-17"
+    "Statement" =[{
+        Effect = "Allow"
+        Principal = {
+            Service = "eks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+    }]
+  })
 }
 
-output "aws_region" {
-  description = "Region configured in the provider"
-  value       = data.aws_region.current.name
+resource "aws_iam_role_policy_attachment"  "prod-eks-cluster-role-policy-attachment" {
+    role = aws_iam_role.prod-eks-cluster-role.name
+    policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-output "vpc_id" {
-  description = "Production VPC ID"
-  value       = aws_vpc.prod-vpc.id
+resource "aws_iam_role" "prod-eks-node-role" {
+  name = "prod-eks-node-role"
+  assume_role_policy = jsonencode({
+    "Version" = "2012-10-17"
+    "Statement" = [{
+        Effect = "Allow"
+        Principal = {
+            Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+    }]
+  })
 }
 
-output "vpc_cidr_block" {
-  description = "Production VPC CIDR"
-  value       = aws_vpc.prod-vpc.cidr_block
+resource "aws_iam_role_policy_attachment" "prod-eks-node-role-policy-attachment" {
+  role = aws_iam_role.prod-eks-node-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-output "public_subnet_ids" {
-  description = "Public subnet IDs (ALB / NAT / bastion-style EC2)"
-  value = [
-    aws_subnet.prod-subnet-public-01.id,
-    aws_subnet.prod-subnet-public-02.id,
+resource "aws_iam_role_policy_attachment" "prod-eks-node-ecr-policy-attachment" {
+  role = aws_iam_role.prod-eks-node-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+}
+
+resource "aws_iam_role_policy_attachment" "prod-eks-node-cni-policy-attachment" {
+  role = aws_iam_role.prod-eks-node-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+# now we have to create the eks master and worker nodes
+
+resource "aws_eks_cluster" "prod_eks" {
+  name = "prod-eks-paywave-cluster"
+  role_arn = aws_iam_role.prod-eks-cluster-role.arn
+  vpc_config {
+    subnet_ids = [
+        aws_subnet.prod-subnet-private-01.id,
+        aws_subnet.prod-subnet-private-02.id
+    ]
+    endpoint_private_access = true
+    endpoint_public_access = true
+    public_access_cidrs = ["65.0.138.49/32"]
+  }
+  depends_on = [
+    aws_iam_role_policy_attachment.prod-eks-cluster-role-policy-attachment
   ]
 }
 
-output "private_subnet_ids" {
-  description = "Private subnet IDs (RDS, EKS nodes)"
-  value = [
+resource "aws_eks_node_group" "prod-eks-worker-node" {
+  cluster_name = aws_eks_cluster.prod_eks.name
+  node_group_name = "prod-eks-worker-node"
+  node_role_arn = aws_iam_role.prod-eks-node-role.arn
+  instance_types = ["t3.small"]
+  subnet_ids = [
     aws_subnet.prod-subnet-private-01.id,
-    aws_subnet.prod-subnet-private-02.id,
+    aws_subnet.prod-subnet-private-02.id
   ]
-}
-
-output "internet_gateway_id" {
-  description = "Internet gateway attached to the VPC"
-  value       = aws_internet_gateway.prod-igw.id
-}
-
-output "nat_gateway_id" {
-  description = "NAT gateway ID (outbound from private subnets)"
-  value       = aws_nat_gateway.prod-ngw.id
-}
-
-output "nat_gateway_public_ip" {
-  description = "Elastic IP used by the NAT gateway"
-  value       = aws_eip.prod-eip.public_ip
-}
-
-output "prod_sg_id" {
-  description = "General prod security group (e.g. ops EC2)"
-  value       = aws_security_group.prod-sg.id
-}
-
-output "rds_security_group_id" {
-  description = "RDS security group ID"
-  value       = aws_security_group.prod-rds-sg.id
-}
-
-output "rds_identifier" {
-  description = "RDS instance identifier"
-  value       = aws_db_instance.prod-mysql-db.identifier
-}
-
-output "rds_endpoint" {
-  description = "RDS hostname:port (use for mysql client / JDBC host)"
-  value       = aws_db_instance.prod-mysql-db.endpoint
-}
-
-output "rds_address" {
-  description = "RDS hostname only"
-  value       = aws_db_instance.prod-mysql-db.address
-}
-
-output "rds_port" {
-  description = "MySQL port"
-  value       = aws_db_instance.prod-mysql-db.port
-}
-
-output "rds_db_subnet_group" {
-  description = "DB subnet group name"
-  value       = aws_db_subnet_group.prod-db-subnet-group.name
-}
-
-output "rds_jdbc_wallet_example" {
-  description = "Example JDBC URL for wallet-service (same host, different schema per service)"
-  value       = "jdbc:mysql://${aws_db_instance.prod-mysql-db.address}:${aws_db_instance.prod-mysql-db.port}/wallet_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=UTC"
-}
-
-output "ecr_repository_urls" {
-  description = "Map of ECR repo name -> repository URL (docker push/pull)"
-  value       = { for name, repo in aws_ecr_repository.prod-ecr-repos : name => repo.repository_url }
-}
-
-output "ecr_repository_arns" {
-  description = "Map of ECR repo name -> ARN"
-  value       = { for name, repo in aws_ecr_repository.prod-ecr-repos : name => repo.arn }
-}
-
-output "console_vpc_link" {
-  description = "AWS console VPC details (open in browser when logged in)"
-  value       = "https://${data.aws_region.current.id}.console.aws.amazon.com/vpc/home?region=${data.aws_region.current.id}#VpcDetails:VpcId=${aws_vpc.prod-vpc.id}"
-}
-
-output "console_rds_link" {
-  description = "AWS console RDS instance"
-  value       = "https://${data.aws_region.current.id}.console.aws.amazon.com/rds/home?region=${data.aws_region.current.id}#database:id=${aws_db_instance.prod-mysql-db.identifier};is-cluster=false"
+  scaling_config {
+    desired_size = 2
+    max_size = 2
+    min_size = 1
+  }
+  depends_on = [
+    aws_iam_role_policy_attachment.prod-eks-node-role-policy-attachment, aws_iam_role_policy_attachment.prod-eks-node-ecr-policy-attachment, aws_iam_role_policy_attachment.prod-eks-node-cni-policy-attachment 
+  ]
 }
 

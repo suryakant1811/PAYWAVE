@@ -278,3 +278,5 @@ resource "aws_eks_node_group" "prod-eks-worker-node" {
   ]
 }
 
+
+

@@ -22,7 +22,7 @@ data "terraform_remote_state" "vpc_data"{
 
 }
 
-module "security_group" {
+module "paywave_common_security_group" {
   source = "https://github.com/suryakant1811/Terraform-master-repo.git//aws-security-group"
 
   name = "paywave-security-group"
@@ -51,6 +51,25 @@ module "security_group" {
         protocol = "tcp"
         description = "Allow HTTPS traffic from the internet"
       }    
+  ]
+  allow_all_egress = true
+}
+
+module "paywave_rds_security_group" {
+  source = "https://github.com/suryakant1811/Terraform-master-repo.git//aws-security-group"
+
+  name = "paywave-rds-security-group"
+  description = "Security group for paywave RDS"
+  vpc_id = data.terraform_remote_state.vpc_data.outputs.vpc_id
+
+  ingress_rules = [
+    {
+      from_port = 3306
+      to_port = 3306
+      cidr_blocks = [data.terraform_remote_state.vpc_data.outputs.vpc_cidr_block]
+      protocol = "tcp"
+      description = "Allow MySQL traffic from the VPC"
+    }
   ]
   allow_all_egress = true
 }

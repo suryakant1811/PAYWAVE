@@ -277,6 +277,3 @@ resource "aws_eks_node_group" "prod-eks-worker-node" {
     aws_iam_role_policy_attachment.prod-eks-node-role-policy-attachment, aws_iam_role_policy_attachment.prod-eks-node-ecr-policy-attachment, aws_iam_role_policy_attachment.prod-eks-node-cni-policy-attachment 
   ]
 }
-
-
-
